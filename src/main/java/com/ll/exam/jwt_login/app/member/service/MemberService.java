@@ -5,6 +5,8 @@ import com.ll.exam.jwt_login.app.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class MemberService {
@@ -18,6 +20,12 @@ public class MemberService {
                 .build();
 
         memberRepository.save(member);
+
+        return member;
+    }
+
+    public Optional<Member> findByUsername(String username) {
+        Optional<Member> member = memberRepository.findByUsername(username);
 
         return member;
     }
