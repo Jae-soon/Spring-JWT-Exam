@@ -6,3 +6,6 @@ spring:
 logging:
   level:
     com.ll.exam.jwt_login.app: debug
+custom:
+  jwt:
+    secretKey: secretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKey

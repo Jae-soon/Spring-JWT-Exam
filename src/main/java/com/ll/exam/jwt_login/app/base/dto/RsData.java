@@ -20,8 +20,16 @@ public class RsData<T> {
         return of(resultCode, msg, null);
     }
 
+    public static <T> RsData<T> successOf(T data) {
+        return of("S-1", "성공", data);
+    }
+
+    public static <T> RsData<T> failOf(T data) {
+        return of("F-1", "실패", data);
+    }
+
     public boolean isSuccess() {
-        return resultCode.startsWith("S-1");
+        return resultCode.startsWith("S-1"); // resultCode에서 가장 첫번째로 오는 String이 S-1일 경우
     }
 
     public boolean isFail() {
