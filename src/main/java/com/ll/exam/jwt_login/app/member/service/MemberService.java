@@ -5,6 +5,8 @@ import com.ll.exam.jwt_login.app.member.repository.MemberRepository;
 import com.ll.exam.jwt_login.app.security.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.Optional;
 
@@ -32,7 +34,19 @@ public class MemberService {
         return member;
     }
 
+    @Transactional
     public String genAccessToken(Member member) {
-        return jwtProvider.generateAccessToken(member.getAccessTokenClaims(), 60 * 60 * 24 * 30); // 30일동안 유지되는 token 발급, 정보 포함되어 있음
+        String accessToken = member.getAccessToken();
+
+        if (StringUtils.hasLength(accessToken) == false ) {
+            accessToken = jwtProvider.generateAccessToken(member.getAccessTokenClaims(), 60L * 60 * 24 * 365 * 100);
+            member.setAccessToken(accessToken);
+        }
+
+        return accessToken;
+    }
+
+    public boolean verifyWithWhiteList(Member member, String token) {
+        return member.getAccessToken().equals(token);
     }
 }

@@ -2,6 +2,7 @@ package com.ll.exam.jwt_login.app.security.filter;
 
 
 import com.ll.exam.jwt_login.app.member.entity.Member;
+import com.ll.exam.jwt_login.app.member.service.MemberService;
 import com.ll.exam.jwt_login.app.security.entity.MemberContext;
 import com.ll.exam.jwt_login.app.security.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private final JwtProvider jwtProvider;
+    private final MemberService memberService;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String bearerToken = request.getHeader("Authorization");
@@ -31,11 +33,16 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         if (bearerToken != null) {
             String token = bearerToken.substring("Bearer ".length());
 
+            // 1차 체크(정보가 변조되지 않았는지 체크)
             if (jwtProvider.verify(token)) {
                 Map<String, Object> claims = jwtProvider.getClaims(token);
 
+                // 캐시(레디스)를 통해서
                 Member member = Member.fromJwtClaims(claims);
-                forceAuthentication(member);
+                // 2차 체크(화이트리스트에 포함되는지)
+                if ( memberService.verifyWithWhiteList(member, token) ) {
+                    forceAuthentication(member);
+                }
             }
         }
 
