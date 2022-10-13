@@ -3,6 +3,3 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/jwt_test?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
     username: root
     password: 1111
-  jpa:
-    hibernate:
-      ddl-auto: create
