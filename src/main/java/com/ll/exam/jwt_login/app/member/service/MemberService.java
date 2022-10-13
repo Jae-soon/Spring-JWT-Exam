@@ -5,6 +5,7 @@ import com.ll.exam.jwt_login.app.member.repository.MemberRepository;
 import com.ll.exam.jwt_login.app.security.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,5 +61,10 @@ public class MemberService {
 
     @CacheEvict("key1")
     public void deleteCacheKey1() {
+    }
+
+    @CachePut("key1")
+    public int putCacheKey1() {
+        return 10;
     }
 }
