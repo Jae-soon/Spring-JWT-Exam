@@ -7,6 +7,7 @@ import com.ll.exam.jwt_login.app.member.service.MemberService;
 import com.ll.exam.jwt_login.app.security.entity.MemberContext;
 import com.ll.exam.jwt_login.app.security.jwt.JwtProvider;
 import com.ll.exam.jwt_login.app.util.Util;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,10 +18,13 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/member")
 @Slf4j
+@Tag(name = "MemberController", description = "로그인 기능과 로그인 된 회원의 정보를 제공 기능을 담당하는 컨트롤러")
 public class MemberController {
     private final MemberService memberService;
     private final PasswordEncoder passwordEncoder;
@@ -31,11 +35,7 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<RsData> login(@RequestBody LoginDto loginDto) {
-        if (loginDto.isNotValid()) { // DB에 저장되어 있지 않는 아이디가 입력되었을 경우
-            return Util.spring.responseEntityOf(RsData.of("F-1", "로그인 정보가 올바르지 않습니다.")); // RsData와 null이 입력된다. 따로 header값을 넣어주지 않음
-        }
-
+    public ResponseEntity<RsData> login(@Valid @RequestBody LoginDto loginDto) {
         Member member = memberService.findByUsername(loginDto.getUsername()).orElse(null); // username을 갖고 loginDto를 받아온다.
 
         if (member == null) { // loginDto가 없을 경우

@@ -1,15 +1,18 @@
 package com.ll.exam.jwt_login.app.article.controller;
 
+import com.ll.exam.jwt_login.app.article.dto.request.ArticleModifyDto;
 import com.ll.exam.jwt_login.app.article.entity.Article;
 import com.ll.exam.jwt_login.app.article.service.ArticleService;
 import com.ll.exam.jwt_login.app.base.dto.RsData;
 import com.ll.exam.jwt_login.app.security.entity.MemberContext;
 import com.ll.exam.jwt_login.app.util.Util;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -54,7 +57,10 @@ public class ArticlesController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<RsData> delete(@PathVariable Long id, @AuthenticationPrincipal MemberContext memberContext) {
+    public ResponseEntity<RsData> delete(
+            @PathVariable Long id,
+            @Parameter(hidden = true) @AuthenticationPrincipal MemberContext memberContext
+    ) {
         Article article = articleService.findById(id).orElse(null);
 
         if (article == null) {
